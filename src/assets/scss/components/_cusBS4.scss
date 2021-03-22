@@ -1,0 +1,18 @@
+.text-muted {
+  letter-spacing: 0;
+  font-size: 0.75rem; // 12px;
+  line-height: 1.5; // 18px;
+  color: $gray-400!important;
+}
+
+.btn {
+  letter-spacing: 0.03125rem; // 0.5px;
+}
+
+.btn-sm {
+  letter-spacing: 0.025rem; // 0.4px;
+}
+
+.btn-secondary, .btn-gray-400 {
+  color: $white;
+}
