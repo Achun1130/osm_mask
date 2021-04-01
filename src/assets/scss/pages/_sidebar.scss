@@ -1,12 +1,25 @@
 .p-sidebar {
-  position: relative;
-  display: inline-block;
-  background-color: $gray-100;
-  box-shadow: 0.1875rem 0.1875rem 0.9375rem $gray-300; // 3px 3px 15px $gray-300;
-  padding: 1.9375rem 1.8125rem; // 31px 29px;
-  // max-width: 34.3125rem; // 549px;
-  // overflow-y: auto;
-  // height: 100vh;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  transform: translateX(-100%);
+  transition: .4s transform;
+  @media (min-width: 568px) {
+    width: 503px;
+  }
+  &.active {
+    transform: translateX(0);
+  }
+  &__body {
+    background-color: $gray-100;
+    box-shadow: 0.1875rem 0.1875rem 0.9375rem $gray-300; // 3px 3px 15px $gray-300;
+    padding: 1.9375rem 1.8125rem; // 31px 29px;
+    // max-width: 34.3125rem; // 549px;
+    overflow-y: auto;
+  }
   &__toggle {
     position: absolute;
     top: 3.1875rem;
@@ -19,10 +32,14 @@
     border-radius: 0.9375rem; // 15px;
   }
   &__card {
+    display: block;
     background-color: $white;
     box-shadow: 0.0625rem 0.0625rem 0.9375rem $gray-200; // 1px 1px 15px $gray-200;
     border-radius: 1.875rem; // 30px;
     padding: 1.4375rem 1.4375rem 0.875rem 1.5625rem; // 23px 23px 14px 25px;
+    &:hover {
+      text-decoration: none;
+    }
   }
   &__icon {
     width: 2.125rem; // 34px;

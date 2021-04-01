@@ -16,3 +16,9 @@
 .btn-secondary, .btn-gray-400 {
   color: $white;
 }
+
+@media (min-width: 568px) {
+  .w-sm-auto {
+    width: auto!important;
+  }
+}

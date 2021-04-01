@@ -1,3 +1,9 @@
+.u-fz-sm {
+  letter-spacing: 0;
+  font-size: 0.75rem; // 12px
+  line-height: 1.5;
+}
+
 .u-fz-md {
   letter-spacing: 0.025rem; // 0.4px;
   font-size: 1rem; // 16px;
@@ -22,4 +28,8 @@
 
 .u-line-height-20-38 {
   line-height: 1.9;
+}
+
+.u-z-index-0 {
+  z-index: 0;
 }
