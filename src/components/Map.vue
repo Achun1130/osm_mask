@@ -35,7 +35,7 @@
       <l-marker v-for="(item, key) in allStores" :key="key"
         :lat-lng="[item.geometry.coordinates[1],item.geometry.coordinates[0]]"
         ref="marker"
-        @click="ISOPEN()">
+        @click="$emit('toggleOpen')">
         <l-popup :options="{ closeButton: false }">
             <div class="d-flex mb-18 justify-content-between">
               <div>
@@ -49,7 +49,7 @@
               </div>
               <div class="ml-40">
                 <a href="#" class="d-block mb-13"
-                  @click.prevent.stop="STARED(item.properties.id)">
+                  @click.prevent.stop="$emit('toggleStared', item.properties.id)">
                   <img src="../assets/images/icon_star_selected.svg" alt="icon_star_selected"
                     v-if="stared.some((el) => el === item.properties.id)">
                   <img src="../assets/images/icon_star_unselected.svg" alt="icon_star_unselected"
@@ -92,8 +92,6 @@
   </l-map>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-
 export default {
   name: 'Map',
   props: {
@@ -101,6 +99,7 @@ export default {
     storePosition: Array,
     myPosition: Array,
     isPosition: Boolean,
+    stared: Array,
   },
   data: () => ({
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors | Author <a href="https://github.com/Achun1130/osm_mask" target="_blank">Chin</a> | UI <a href="https://challenge.thef2e.com/user/3509?schedule=4438#works-4438" target="_blank">Christy</a>',
@@ -118,10 +117,6 @@ export default {
     goMyPosition() {
       this.$refs.map.mapObject.setView(this.myPosition, 18);
     },
-    ...mapMutations(['STARED', 'ISOPEN']),
-  },
-  computed: {
-    ...mapGetters(['stared']),
   },
   watch: {
     storePosition: 'showPopup',

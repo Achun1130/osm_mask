@@ -6,7 +6,7 @@
     <div class="p-sidebar"
       :class="{ 'active': isOpen }">
       <a href="#" class="p-sidebar__toggle"
-        @click.prevent="ISOPEN(true)">
+        @click.prevent="toggleOpen(true)">
         <img src="./assets/images/bg_drag.svg" alt="toggle-icon">
       </a>
       <div class="p-sidebar__body h-100">
@@ -20,7 +20,7 @@
             </div>
           </div>
           <a href="#" class="d-sm-none d-block text-secondary p-3"
-            @click.prevent="ISOPEN(true)">
+            @click.prevent="toggleOpen(true)">
             <i class="fas fa-arrow-left fa-3x"></i>
           </a>
         </div>
@@ -94,7 +94,7 @@
         </div>
         <p class="u-fz-lg text-center" v-if="message && !stores.length">查無店家，請重新搜尋</p>
         <a href="#" class="p-sidebar__card mb-23"
-          @click.prevent="goStore(item); ISOPEN();"
+          @click.prevent="goStore(item); toggleOpen();"
           v-for="(item, key) in stores" :key="key">
           <div class="d-flex mb-18">
             <div>
@@ -112,7 +112,7 @@
             </div>
             <div class="ml-auto">
               <a href="#" class="d-block mb-13"
-                @click.prevent.stop="STARED(item.properties.id)">
+                @click.prevent.stop="toggleStared(item.properties.id)">
                 <img src="./assets/images/icon_star_selected.svg" alt="icon_star_selected"
                   v-if="stared.some((el) => el === item.properties.id)">
                 <img src="./assets/images/icon_star_unselected.svg" alt="icon_star_unselected"
@@ -149,12 +149,14 @@
       :allStores="allStores"
       :storePosition="storePosition"
       :myPosition="myPosition"
-      :isPosition="isPosition"/>
+      :isPosition="isPosition"
+      :stared="stared"
+      @toggleOpen="toggleOpen"
+      @toggleStared="toggleStared"/>
   </main>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
 import { latLng } from 'leaflet';
 
 import countyData from './assets/json/county.json';
@@ -186,6 +188,8 @@ export default {
       date: '',
       week: '',
     },
+    stared: JSON.parse(localStorage.getItem('stared')) || [],
+    isOpen: true,
   }),
   methods: {
     getData() {
@@ -339,10 +343,21 @@ export default {
           break;
       }
     },
-    ...mapMutations(['STARED', 'ISOPEN']),
-  },
-  computed: {
-    ...mapGetters(['stared', 'isOpen']),
+    toggleStared(id) {
+      if (!this.stared.length || this.stared.indexOf(id) < 0) {
+        this.stared.push(id);
+      } else {
+        this.stared.splice(this.stared.indexOf(id), 1);
+      }
+      localStorage.setItem('stared', JSON.stringify(this.stared));
+    },
+    toggleOpen(isToggle) {
+      if (isToggle) {
+        this.isOpen = !this.isOpen;
+      } else {
+        this.isOpen = false;
+      }
+    },
   },
   watch: {
     mask() {

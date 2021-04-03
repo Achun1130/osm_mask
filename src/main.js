@@ -10,7 +10,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 
 import App from './App.vue';
 import number from './filters/number';
-import store from './store';
 
 Vue.config.productionTip = false;
 
@@ -30,6 +29,5 @@ Vue.component('loading', Loading);
 Vue.filter('number', number);
 
 new Vue({
-  store,
   render: (h) => h(App),
 }).$mount('#app');
