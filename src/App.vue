@@ -146,8 +146,8 @@
       </div>
     </div>
     <Map
+      ref="mymap"
       :allStores="allStores"
-      :storePosition="storePosition"
       :myPosition="myPosition"
       :isPosition="isPosition"
       :stared="stared"
@@ -181,7 +181,6 @@ export default {
     },
     isLoading: true,
     isPosition: false,
-    storePosition: [],
     myPosition: [25.03746, 121.564558],
     message: '',
     today: {
@@ -288,7 +287,7 @@ export default {
       const storeLat = store.geometry.coordinates[1];
       const storeLng = store.geometry.coordinates[0];
 
-      this.storePosition = [storeLat, storeLng];
+      this.$refs.mymap.showPopup([storeLat, storeLng]);
     },
     showMessage() {
       if (!this.stores.length) {

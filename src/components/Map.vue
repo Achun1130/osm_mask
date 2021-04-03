@@ -96,7 +96,6 @@ export default {
   name: 'Map',
   props: {
     allStores: Array,
-    storePosition: Array,
     myPosition: Array,
     isPosition: Boolean,
     stared: Array,
@@ -105,11 +104,12 @@ export default {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors | Author <a href="https://github.com/Achun1130/osm_mask" target="_blank">Chin</a> | UI <a href="https://challenge.thef2e.com/user/3509?schedule=4438#works-4438" target="_blank">Christy</a>',
   }),
   methods: {
-    showPopup() {
+    showPopup(storePosition) {
       this.$nextTick(() => {
-        this.$refs.map.mapObject.setView(this.storePosition, 18);
+        this.$refs.map.mapObject.setView(storePosition, 18);
         const store = this.$refs.marker.find((el) => (
-          el.mapObject._latlng.lat === this.storePosition[0]
+          el.mapObject._latlng.lat === storePosition[0]
+          && el.mapObject._latlng.lng === storePosition[1]
         ));
         store.mapObject.openPopup();
       });
@@ -117,9 +117,6 @@ export default {
     goMyPosition() {
       this.$refs.map.mapObject.setView(this.myPosition, 18);
     },
-  },
-  watch: {
-    storePosition: 'showPopup',
   },
 };
 </script>
