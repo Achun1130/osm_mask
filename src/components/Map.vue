@@ -103,7 +103,7 @@ export default {
     isPosition: Boolean,
   },
   data: () => ({
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors | Author <a href="https://github.com/Achun1130/mask" target="_blank">Chin</a> | UI <a href="https://challenge.thef2e.com/user/3509?schedule=4438#works-4438" target="_blank">Christy</a>',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors | Author <a href="https://github.com/Achun1130/osm_mask" target="_blank">Chin</a> | UI <a href="https://challenge.thef2e.com/user/3509?schedule=4438#works-4438" target="_blank">Christy</a>',
   }),
   methods: {
     showPopup() {
