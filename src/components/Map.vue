@@ -51,7 +51,7 @@
                 <a href="#" class="d-block mb-13"
                   @click.prevent.stop="$emit('toggleStared', item.properties.id)">
                   <img src="../assets/images/icon_star_selected.svg" alt="icon_star_selected"
-                    v-if="stared.some((el) => el === item.properties.id)">
+                    v-if="item.properties.stared">
                   <img src="../assets/images/icon_star_unselected.svg" alt="icon_star_unselected"
                     v-else>
                 </a>

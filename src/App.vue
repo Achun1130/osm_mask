@@ -114,7 +114,7 @@
               <a href="#" class="d-block mb-13"
                 @click.prevent.stop="toggleStared(item.properties.id)">
                 <img src="./assets/images/icon_star_selected.svg" alt="icon_star_selected"
-                  v-if="stared.some((el) => el === item.properties.id)">
+                  v-if="item.properties.stared">
                 <img src="./assets/images/icon_star_unselected.svg" alt="icon_star_unselected"
                   v-else>
               </a>
@@ -165,6 +165,8 @@ import Map from './components/Map.vue';
 export default {
   name: 'App',
   data: () => ({
+    countyData,
+    AreaList: [],
     location: {
       keyword: '',
       county: '',
@@ -172,23 +174,21 @@ export default {
     },
     allStores: [],
     stores: [],
-    countyData,
-    AreaList: [],
+    stared: JSON.parse(localStorage.getItem('stared')) || [],
     mask: 'all',
+    isLoading: true,
+    isPosition: false,
+    isOpen: true,
     status: {
       isNear: false,
       isStared: false,
     },
-    isLoading: true,
-    isPosition: false,
     myPosition: [25.03746, 121.564558],
     message: '',
     today: {
       date: '',
       week: '',
     },
-    stared: JSON.parse(localStorage.getItem('stared')) || [],
-    isOpen: true,
   }),
   methods: {
     getData() {
@@ -202,6 +202,7 @@ export default {
             const distance = latLng(vm.myPosition).distanceTo(storePosition);
             el.properties.distance = distance;
           }
+          el.properties.stared = vm.stared.some((id) => id === el.properties.id);
           el.properties.mask_total = el.properties.mask_adult + el.properties.mask_child;
           return el.properties.mask_total;
         });
@@ -220,7 +221,10 @@ export default {
       this.goStore(this.stores[0]);
     },
     filterStore() {
-      if (!this.location.county && !this.location.keyword.trim()) { return; }
+      if (!this.location.county && !this.location.keyword.trim()) {
+        this.stores = [];
+        return;
+      }
 
       const keyword = this.location.keyword.trim().split(' ');
       const arr = [this.location.county, this.location.town, ...keyword];
@@ -269,9 +273,7 @@ export default {
       }
     },
     filterStared() {
-      this.stores = this.allStores.filter((el) => (
-        this.stared.some((id) => id === el.properties.id)
-      ));
+      this.stores = this.allStores.filter((el) => el.properties.stared);
     },
     filterAndSort() {
       if (this.status.isStared) {
@@ -343,6 +345,14 @@ export default {
       }
     },
     toggleStared(id) {
+      this.allStores.some((el) => {
+        if (el.properties.id === id) {
+          el.properties.stared = !el.properties.stared;
+          return true;
+        }
+        return false;
+      });
+
       if (!this.stared.length || this.stared.indexOf(id) < 0) {
         this.stared.push(id);
       } else {
