@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import { Icon } from 'leaflet';
 import {
   LMap, LTileLayer, LControlZoom, LMarker, LPopup, LIcon, LCircle, LControl,
 } from 'vue2-leaflet';
@@ -12,13 +11,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import App from './App.vue';
 import number from './filters/number';
 import store from './store';
-
-delete Icon.Default.prototype._getIconUrl;
-Icon.Default.mergeOptions({
-  iconRetinaUrl: 'leaflet/dist/images/marker-icon-2x.png',
-  iconUrl: 'leaflet/dist/images/marker-icon.png',
-  shadowUrl: 'leaflet/dist/images/marker-shadow.png',
-});
 
 Vue.config.productionTip = false;
 
