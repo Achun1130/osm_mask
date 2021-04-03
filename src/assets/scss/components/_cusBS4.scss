@@ -7,14 +7,31 @@
 
 .btn {
   letter-spacing: 0.03125rem; // 0.5px;
+  @media (min-width: 568px) {
+    padding: 0.625rem 2.125rem;; // 10px 34px
+  }
 }
 
 .btn-sm {
   letter-spacing: 0.025rem; // 0.4px;
+  @media (min-width: 568px) {
+    padding: 0.3125rem 0.875rem; // 5px 14px
+  }
 }
 
-.btn-secondary, .btn-gray-400 {
+.btn-secondary {
   color: $white;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:active {
+  background-color: $secondary;
+  border-color: $secondary;
+}
+
+.btn-outline-primary:disabled:hover {
+  background-color: transparent;
+  border-color: $primary;
+  cursor: not-allowed;
 }
 
 @media (min-width: 568px) {

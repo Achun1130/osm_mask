@@ -1,4 +1,4 @@
-# vue_osm
+# osm_mask
 
 ## Project setup
 ```

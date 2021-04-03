@@ -1,5 +1,5 @@
 {
-  "name": "vue_osm",
+  "name": "osm_mask",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -48,7 +48,7 @@
     },
     "rules": {
       "no-underscore-dangle": ["error", {
-        "allow": ["_latlng"]
+        "allow": ["_latlng", "_getIconUrl"]
       }],
       "no-param-reassign": ["error", {
         "props": true,

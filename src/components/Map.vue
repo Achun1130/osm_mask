@@ -1,63 +1,89 @@
 <template>
   <l-map class="h-100 w-100 u-z-index-0"
-    :zoom="zoom"
-    :center="center"
+    :zoom="16"
+    :center="myPosition"
     :options="{ zoomControl: false }"
     ref="map">
     <l-control-zoom position="bottomright"></l-control-zoom>
     <l-tile-layer class="h-100"
-      :url="url"
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       :attribution="attribution"></l-tile-layer>
-    <l-marker-cluster :options="{ disableClusteringAtZoom: 16 }">
+    <template v-if="isPosition">
+      <l-marker
+        :lat-lng="myPosition">
+        <l-icon
+          :icon-size="[32, 50]"
+          :icon-anchor="[16, 50]"
+          :shadow-size="[50, 50]"
+          :icon-url="require('@/assets/images/icon_nav_me.svg')"
+          shadow-url="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png">
+        </l-icon>
+      </l-marker>
+      <l-circle
+        :lat-lng="myPosition"
+        :radius="10"></l-circle>
+      <l-control
+        position="bottomright">
+        <div class="leaflet-bar">
+          <a href="#" class="leaflet-touch" @click.prevent="goMyPosition()">
+            <i class="fas fa-crosshairs fa-lg"></i>
+          </a>
+        </div>
+      </l-control>
+    </template>
+    <l-marker-cluster :options="{ disableClusteringAtZoom: 18 }">
       <l-marker v-for="(item, key) in allStores" :key="key"
         :lat-lng="[item.geometry.coordinates[1],item.geometry.coordinates[0]]"
-        ref="marker">
+        ref="marker"
+        @click="ISOPEN()">
         <l-popup :options="{ closeButton: false }">
             <div class="d-flex mb-18 justify-content-between">
               <div>
                 <h4 class="d-inline-block mr-18 mb-4">{{ item.properties.name }}</h4>
-                <span class="u-fz-md">10km</span>
+                <span class="u-fz-md" v-if="item.properties.distance">
+                  {{ item.properties.distance > 1000 ?
+                    `${Math.round((item.properties.distance / 1000) * 10) / 10}km` :
+                    `${Math.round(item.properties.distance)}m` }}
+                </span>
                 <div class="text-muted">{{ item.properties.updated }}</div>
               </div>
               <div class="ml-40">
-                <a href="#" class="btn p-sidebar__icon js-stared"
-                  :class="stared.some((el) => el === item.properties.id) ?
-                  'btn-secondary' : 'btn-outline-primary'"
-                  @click.prevent="toggleStared(item.properties.id)">
-                  <i class="fa-star"
-                    :class="stared.some((el) => el === item.properties.id) ? 'fas' : 'far'"></i>
+                <a href="#" class="d-block mb-13"
+                  @click.prevent.stop="STARED(item.properties.id)">
+                  <img src="../assets/images/icon_star_selected.svg" alt="icon_star_selected"
+                    v-if="stared.some((el) => el === item.properties.id)">
+                  <img src="../assets/images/icon_star_unselected.svg" alt="icon_star_unselected"
+                    v-else>
                 </a>
-                <a :href="`https://www.google.com.tw/maps/search/${item.properties.address}`"
-                  class="btn btn-outline-primary p-sidebar__icon mb-0" target="_blank">
-                  <i class="fas fa-location-arrow"></i>
+                <a class="d-block" :href="`https://www.google.com.tw/maps/search/${item.properties.address}`"
+                  target="_blank">
+                  <img src="../assets/images/icon_nav.svg" alt="icon_nav">
                 </a>
               </div>
             </div>
-            <div class="d-flex">
-              <button type="button" class="btn btn-block
-                d-flex align-items-center py-0 mr-15 py-0 px-13 u-fz-sm text-white"
-                :class="item.properties.mask_adult ? 'btn-info' : 'btn-gray-400'">
-                成人
-                <span class="u-fz-lg u-letter-spacing-0 flex-grow-1">
+            <div class="d-flex justify-content-between text-center">
+              <div class="flex-fill w-100 d-flex align-items-center
+                u-border-radius-md text-white u-fz-sm px-13 mr-15"
+                :class="item.properties.mask_adult ? 'bg-info' : 'bg-gray-400'">成人
+                <span class="u-fz-lg u-letter-spacing-0 flex-grow-1 ml-5">
                   {{ item.properties.mask_adult | number }}
                 </span>
-              </button>
-              <button type="button" class="btn btn-block mt-0
-                d-flex align-items-center py-0 px-13 u-fz-sm text-white"
-                :class="item.properties.mask_child ? 'btn-info' : 'btn-gray-400'">
-                兒童
-                <span class="u-fz-lg u-letter-spacing-0 flex-grow-1">
+              </div>
+              <div class="flex-fill w-100 d-flex align-items-center
+                u-border-radius-md text-white u-fz-sm px-13"
+                :class="item.properties.mask_child ? 'bg-info' : 'bg-gray-400'">兒童
+                <span class="u-fz-lg u-letter-spacing-0 flex-grow-1 ml-5">
                   {{ item.properties.mask_child | number }}
                 </span>
-              </button>
+              </div>
             </div>
         </l-popup>
         <l-icon
           className='p-map__icon text-center'
-          :icon-size="[97, 97]"
-          :icon-anchor="[48, 97]"
+          :icon-size="[90, 90]"
+          :icon-anchor="[45, 90]"
           :popup-anchor="[0, -80]">
-          <span style="line-height: 97px" class="text-white">
+          <span style="line-height: 85px" class="text-white">
             {{ item.properties.mask_total >= 2000 ? '2K+' : item.properties.mask_total }}
           </span>
           </l-icon>
@@ -66,64 +92,39 @@
   </l-map>
 </template>
 <script>
-import {
-  LMap, LTileLayer, LControlZoom, LMarker, LPopup, LIcon,
-} from 'vue2-leaflet';
-import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'Map',
   props: {
     allStores: Array,
-    storeLocation: Array,
+    storePosition: Array,
+    myPosition: Array,
+    isPosition: Boolean,
   },
   data: () => ({
-    zoom: 18,
-    center: [25.040859, 121.528648],
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors | Author Chin | UI <a href="https://challenge.thef2e.com/user/3509?schedule=4438#works-4438" target="_blank">Christy</a>',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors | Author <a href="https://github.com/Achun1130/mask" target="_blank">Chin</a> | UI <a href="https://challenge.thef2e.com/user/3509?schedule=4438#works-4438" target="_blank">Christy</a>',
   }),
   methods: {
-    toggleStared(id) {
-      this.$store.commit('toggleStared', id);
-    },
-    test() {
+    showPopup() {
       this.$nextTick(() => {
-        this.$refs.map.mapObject.setView(this.storeLocation, 18);
+        this.$refs.map.mapObject.setView(this.storePosition, 18);
         const store = this.$refs.marker.find((el) => (
-          // eslint-disable-next-line no-underscore-dangle
-          el.mapObject._latlng.lat === this.storeLocation[0]
+          el.mapObject._latlng.lat === this.storePosition[0]
         ));
         store.mapObject.openPopup();
       });
     },
+    goMyPosition() {
+      this.$refs.map.mapObject.setView(this.myPosition, 18);
+    },
+    ...mapMutations(['STARED', 'ISOPEN']),
   },
   computed: {
     ...mapGetters(['stared']),
   },
   watch: {
-    storeLocation: 'test',
-  },
-  mounted() {
-    this.$nextTick(() => {
-      if (this.allStores.length) {
-        this.$refs.marker.forEach((el) => {
-          el.mapObject.on('click', () => {
-            this.$store.commit('toggleIsOpen');
-          });
-        });
-      }
-    });
-  },
-  components: {
-    LMap,
-    LTileLayer,
-    LControlZoom,
-    'l-marker-cluster': Vue2LeafletMarkerCluster,
-    LMarker,
-    LPopup,
-    LIcon,
+    storePosition: 'showPopup',
   },
 };
 </script>

@@ -9,25 +9,21 @@ export default new Vuex.Store({
     isOpen: true,
   },
   mutations: {
-    toggleStared(state, id) {
-      if (!state.stared.length || state.stared.indexOf(id) < 0) {
-        state.stared.push(id);
+    STARED(state, payload) {
+      if (!state.stared.length || state.stared.indexOf(payload) < 0) {
+        state.stared.push(payload);
       } else {
-        state.stared.splice(state.stared.indexOf(id), 1);
+        state.stared.splice(state.stared.indexOf(payload), 1);
       }
       localStorage.setItem('stared', JSON.stringify(state.stared));
     },
-    toggleIsOpen(state, boolean) {
-      if (boolean) {
+    ISOPEN(state, payload) {
+      if (payload) {
         state.isOpen = !state.isOpen;
       } else {
         state.isOpen = false;
       }
     },
-  },
-  actions: {
-  },
-  modules: {
   },
   getters: {
     stared: (state) => state.stared,

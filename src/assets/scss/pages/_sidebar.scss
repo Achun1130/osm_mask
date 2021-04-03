@@ -17,7 +17,6 @@
     background-color: $gray-100;
     box-shadow: 0.1875rem 0.1875rem 0.9375rem $gray-300; // 3px 3px 15px $gray-300;
     padding: 1.9375rem 1.8125rem; // 31px 29px;
-    // max-width: 34.3125rem; // 549px;
     overflow-y: auto;
   }
   &__toggle {
@@ -25,11 +24,19 @@
     top: 3.1875rem;
     left: 100%;
   }
-  &__image {
-    background: $white url("~@/assets/images/banner_announce_fix_01.png") center right no-repeat;
+  &__day {
+    position: relative;
+    background-color: $white;
     padding: 0.5625rem 1.375rem 0.5rem; // 9px 22px 8px;
     margin: 0.9375rem 0 1.75rem; // 15px 0 28px;
     border-radius: 0.9375rem; // 15px;
+    img {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      z-index: 0;
+    }
   }
   &__card {
     display: block;
@@ -40,17 +47,6 @@
     &:hover {
       text-decoration: none;
     }
-  }
-  &__icon {
-    width: 2.125rem; // 34px;
-    height: 2.125rem; // 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border-width: 0.125rem; // 2px;
-    border-radius: 50%;
-    margin-bottom: 0.8125rem; // 13px;
   }
   &__search {
     position: absolute;
